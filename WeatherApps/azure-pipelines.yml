@@ -1,1 +1,49 @@
+trigger:
+- main
 
+variables:
+  imageName: 'weatherapp'
+  acrName: 'mydockeracr123'
+  acrServiceConnection: 'WeatherApps-ACR-Connection'
+  sshServiceConnection: 'SSH_SERVICE_CONNECTION_NAME'
+  vmAppPath: '/home/ubuntu/weatherapp'
+  rabbitmqPassword: $(rabbitmqPassword)  # Secret from DevOps Library
+
+stages:
+- stage: Build
+  jobs:
+  - job: BuildAndPush
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - checkout: self
+    - task: Docker@2
+      inputs:
+        command: login
+        containerRegistry: $(acrServiceConnection)
+    - task: Docker@2
+      inputs:
+        command: buildAndPush
+        repository: '$(acrName)/$(imageName)'
+        dockerFile: '**/Dockerfile'
+        tags: |
+          $(Build.BuildId)
+
+- stage: Deploy
+  dependsOn: Build
+  jobs:
+  - job: DeployToVM
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: SSH@0
+      inputs:
+        sshEndpoint: $(sshServiceConnection)
+        runOptions: commands
+        commands: |
+          mkdir -p $(vmAppPath)
+          cd $(vmAppPath)
+          cp -r $(Build.SourcesDirectory)/* $(vmAppPath)
+          docker-compose down || true
+          docker-compose pull
+          docker-compose up -d
