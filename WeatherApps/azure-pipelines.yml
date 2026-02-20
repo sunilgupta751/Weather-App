@@ -37,7 +37,7 @@ stages:
   jobs:
   - job: DeployToVM
     pool:
-      vmImage: 'ubuntu-latest'
+      vmImage: 'SelfHosted-AgentPool'
     steps:
     - task: SSH@0
       inputs:
