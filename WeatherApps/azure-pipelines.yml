@@ -2,12 +2,14 @@ trigger:
 - dev
 
 variables:
+- group: Variable_Group_Rabbit_Mq_Password
+
+variables:
   imageName: 'weatherapp'
-  acrName: 'acrlearn001'
+  acrName: 'acrlearn001.azurecr.io'
   acrServiceConnection: 'weatherapp-service-connection'
   sshServiceConnection: 'ssh-service-connection'
   vmAppPath: '/home/ubuntu/weatherapp'
-  rabbitmqPassword: $(rabbitmqPassword)  # Secret from DevOps Library
 
 stages:
 - stage: Build
@@ -19,15 +21,13 @@ stages:
     - checkout: self
     - task: Docker@2
       inputs:
-        command: login
-        containerRegistry: $(acrServiceConnection)
-    - task: Docker@2
-      inputs:
         command: buildAndPush
-        repository: '$(acrName)/$(imageName)'
+        repository: '$(imageName)'
         dockerFile: '**/Dockerfile'
+        containerRegistry: $(acrServiceConnection)
         tags: |
           $(Build.BuildId)
+          latest
 
 - stage: Deploy
   dependsOn: Build
@@ -43,7 +43,10 @@ stages:
         commands: |
           mkdir -p $(vmAppPath)
           cd $(vmAppPath)
-          cp -r $(Build.SourcesDirectory)/* $(vmAppPath)
+
+          export rabbitmqPassword=$(rabbitmqPassword)
+
+          docker pull $(acrName)/$(imageName):$(Build.BuildId)
+
           docker-compose down || true
-          docker-compose pull
           docker-compose up -d
