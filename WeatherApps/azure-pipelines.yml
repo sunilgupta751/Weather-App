@@ -27,7 +27,7 @@ stages:
         command: buildAndPush
         repository: '$(imageName)'
         dockerFile: '**/Dockerfile'
-        containerRegistry: $(acrServiceConnection)
+        containerRegistry: $(acr_serviceconnection)
         tags: |
           $(Build.BuildId)
           latest
