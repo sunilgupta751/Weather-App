@@ -19,7 +19,7 @@ stages:
   jobs:
   - job: BuildAndPush
     pool:
-      vmImage: 'SelfHosted-AgentPool'
+      name: 'SelfHosted-AgentPool'
     steps:
     - checkout: self
     - task: Docker@2
@@ -37,7 +37,7 @@ stages:
   jobs:
   - job: DeployToVM
     pool:
-      vmImage: 'SelfHosted-AgentPool'
+      name: 'SelfHosted-AgentPool'
     steps:
     - task: SSH@0
       inputs:
