@@ -3,8 +3,6 @@ trigger:
 
 variables:
 - group: Variable_Group_Rabbit_Mq_Password
-
-variables:
   imageName: 'weatherapp'
   acrName: 'acrlearn001.azurecr.io'
   acrServiceConnection: 'weatherapp-service-connection'
