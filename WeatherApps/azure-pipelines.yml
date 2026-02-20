@@ -7,7 +7,7 @@ variables:
   value: 'weatherapp'
 - name: acrName
   value: 'acrlearn001.azurecr.io'
-- name: acrServiceConnection
+- name: acr_serviceconnection
   value: 'weatherapp-service-connection'
 - name: sshServiceConnection
   value: 'ssh-service-connection'
