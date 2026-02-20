@@ -19,7 +19,7 @@ stages:
   jobs:
   - job: BuildAndPush
     pool:
-      vmImage: 'ubuntu-latest'
+      vmImage: 'SelfHosted-AgentPool'
     steps:
     - checkout: self
     - task: Docker@2
