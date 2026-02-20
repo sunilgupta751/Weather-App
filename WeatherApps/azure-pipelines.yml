@@ -2,12 +2,17 @@ trigger:
 - dev
 
 variables:
-- group: Variable_Group_Rabbit_Mq_Password
-  imageName: 'weatherapp'
-  acrName: 'acrlearn001.azurecr.io'
-  acrServiceConnection: 'weatherapp-service-connection'
-  sshServiceConnection: 'ssh-service-connection'
-  vmAppPath: '/home/ubuntu/weatherapp'
+- group: Variable_Group_Rabbit_Mq_Password   # variable group for secrets like rabbitmqPassword
+- name: imageName
+  value: 'weatherapp'
+- name: acrName
+  value: 'acrlearn001.azurecr.io'
+- name: acrServiceConnection
+  value: 'weatherapp-service-connection'
+- name: sshServiceConnection
+  value: 'ssh-service-connection'
+- name: vmAppPath
+  value: '/home/ubuntu/weatherapp'
 
 stages:
 - stage: Build
