@@ -1,11 +1,11 @@
 trigger:
-- main
+- dev
 
 variables:
   imageName: 'weatherapp'
-  acrName: 'mydockeracr123'
-  acrServiceConnection: 'WeatherApps-ACR-Connection'
-  sshServiceConnection: 'SSH_SERVICE_CONNECTION_NAME'
+  acrName: 'acrlearn001'
+  acrServiceConnection: 'weatherapp-service-connection'
+  sshServiceConnection: 'ssh-service-connection'
   vmAppPath: '/home/ubuntu/weatherapp'
   rabbitmqPassword: $(rabbitmqPassword)  # Secret from DevOps Library
 
