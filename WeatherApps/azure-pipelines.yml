@@ -46,13 +46,14 @@ stages:
         commands: |
           mkdir -p $(vmAppPath)
           cd $(vmAppPath)
-
-          export rabbitmqPassword=$(rabbitmqPassword)
-          # Login to ACR (ensure MI or SP credentials)
-          az acr login --name acrlearn001
-
+          
+          # Login to ACR using SP (Service Principal)
+          echo $(acrServicePrincipalPassword) | docker login $(acrName) -u $(acrServicePrincipalId) --password-stdin
+                   
           # Pull the built image
           docker pull $(acrName)/$(imageName):$(Build.BuildId)
-
+          
+          # Stop old containers if running
           docker-compose down || true
+           # Start new containers
           docker-compose up -d
