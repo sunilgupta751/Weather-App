@@ -26,7 +26,7 @@ stages:
     - task: Docker@2
       inputs:
         command: buildAndPush
-        containerRegistry: 'acr_serviceconnection'  #$(acrserviceconnection)
+        containerRegistry: 'acr_serviceconnection'
         repository: '$(imageName)'
         dockerFile: '**/Dockerfile'
         tags: |
