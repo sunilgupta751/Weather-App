@@ -2,7 +2,7 @@ trigger:
 - dev
 
 variables:
-- group: Variable_Group_Rabbit_Mq_Password   # variable group for secrets like rabbitmqPassword  
+- group: Variable_Group_Rabbit_Mq_Password   # variable group for secrets like rabbitmqPassword   
 - group: service_principle_credentials 
 - name: imageName
   value: 'weatherapp'
