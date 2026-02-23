@@ -2,7 +2,8 @@ trigger:
 - dev
 
 variables:
-- group: Variable_Group_Rabbit_Mq_Password   # variable group for secrets like rabbitmqPassword   
+- group: Variable_Group_Rabbit_Mq_Password   # variable group for secrets like rabbitmqPassword  
+- group: service_principle_credentials 
 - name: imageName
   value: 'weatherapp'
 - name: acrName
@@ -48,12 +49,12 @@ stages:
           cd $(vmAppPath)
           
           # Login to ACR using SP (Service Principal)
-          echo $(acrServicePrincipalPassword) | docker login $(acrName) -u $(acrServicePrincipalId) --password-stdin
+          echo $(acrServicePrincipalSecreteVal) | docker login $(acrName) -u $(acrServicePrincipalClientId) --password-stdin
                    
           # Pull the built image
           docker pull $(acrName)/$(imageName):$(Build.BuildId)
           
           # Stop old containers if running
           docker-compose down || true
-           # Start new containers
+            # Start new containers
           docker-compose up -d
