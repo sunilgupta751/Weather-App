@@ -13,7 +13,7 @@ variables:
 - name: sshServiceConnection
   value: 'ssh-service-connection'
 - name: vmAppPath
-  value: '/home/ubuntu/weatherapp'
+  value: '/home/azureuser/weatherapp'
 
 stages:
 - stage: Build
