@@ -25,9 +25,9 @@ stages:
     - task: Docker@2
       inputs:
         command: buildAndPush
+        dockerRegistryEndpoint: '$(acrserviceconnection)'
         repository: '$(acrName)/$(imageName)'
         dockerFile: '**/Dockerfile'
-        containerRegistry: $(acrserviceconnection)
         tags: |
           $(Build.BuildId)
           latest
