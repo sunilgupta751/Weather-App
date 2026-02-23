@@ -26,7 +26,7 @@ stages:
     - task: Docker@2
       inputs:
         command: buildAndPush
-        containerRegistry: 'acr_serviceconnection'
+        containerRegistry: '$(acrserviceconnection)'
         repository: '$(imageName)'
         dockerFile: '**/Dockerfile'
         tags: |
@@ -44,6 +44,7 @@ stages:
       inputs:
         sshEndpoint: $(sshServiceConnection)
         runOptions: commands
+        failOnStdErr: false 
         commands: |
           mkdir -p $(vmAppPath)
           cd $(vmAppPath)
