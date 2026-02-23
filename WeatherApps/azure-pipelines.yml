@@ -48,7 +48,10 @@ stages:
           cd $(vmAppPath)
 
           export rabbitmqPassword=$(rabbitmqPassword)
+          # Login to ACR (ensure MI or SP credentials)
+          az acr login --name acrlearn001
 
+          # Pull the built image
           docker pull $(acrName)/$(imageName):$(Build.BuildId)
 
           docker-compose down || true
