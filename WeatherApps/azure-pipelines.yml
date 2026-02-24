@@ -56,7 +56,7 @@ stages:
     - task: CopyFilesOverSSH@0
       inputs:
         sshEndpoint: $(sshServiceConnection)
-        sourceFolder: '$(System.DefaultWorkingDirectory)'
+        sourceFolder: '$(System.DefaultWorkingDirectory)/WeatherApps'
         contents: '**/docker-compose.yml'
         targetFolder: '$(vmAppPath)' 
         flatten: true
