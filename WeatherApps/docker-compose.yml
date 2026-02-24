@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
 
   rabbitmq: # ye service ka name hai aur service ka name api se bhi yahi call hoga aur container main jab service run hoti hai to service ka name likha jata hai na ki local host.
