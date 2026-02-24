@@ -18,7 +18,7 @@ services:
     depends_on:
       - rabbitmq
     ports:
-      - "5132:5132"
+      - "8081:5132"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - RabbitMQ__Host=rabbitmq
