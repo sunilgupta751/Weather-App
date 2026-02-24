@@ -14,7 +14,9 @@ variables:
   value: 'ssh-service-connection'
 - name: vmAppPath
   value: '/home/azureuser/weatherapp'
-
+# ==============================
+# BUILD STAGE
+# ==============================
 stages:
 - stage: Build
   jobs:
@@ -32,7 +34,9 @@ stages:
         tags: |
           $(Build.BuildId)
           latest
-
+# ==============================
+# DEPLOY STAGE
+# ==============================
 - stage: Deploy
   dependsOn: Build
   jobs:
@@ -40,23 +44,34 @@ stages:
     pool:
       name: 'SelfHosted-AgentPool'
     steps:
+     # Ensure target folder exists
     - task: SSH@0
       inputs:
         sshEndpoint: $(sshServiceConnection)
         runOptions: commands
-        failOnStdErr: false 
         commands: |
           mkdir -p $(vmAppPath)
           cd $(vmAppPath)
+      # Copy docker-compose.yml to VM
+    - task: CopyFilesOverSSH@0
+      inputs:
+        sshEndpoint: $(sshServiceConnection)
+        sourceFolder: '$(System.DefaultWorkingDirectory)'
+        contents: 'docker-compose.yml'
+        targetFolder: '$(vmAppPath)' 
+      # Deploy using Docker Compose
+    - task: SSH@0
+      inputs:
+        sshEndpoint: $(sshServiceConnection)
+        runOptions: commands
+        failOnStdErr: false
+        commands: |
+          cd $(vmAppPath)  
           
           # Login to ACR using SP (Service Principal)
           echo $(acrServicePrincipalSecreteVal) | docker login $(acrName) -u $(acrServicePrincipalClientId) --password-stdin
                    
-          # Pull the built image
-          docker pull $(acrName)/$(imageName):$(Build.BuildId)
-          
-          # Stop old containers if running
+          export IMAGE_TAG=$(Build.BuildId)
+          docker compose pull
           docker compose down || true
-
-          # Start new containers
-          docker compose up -d
+          docker compose up -d --remove-orphans
