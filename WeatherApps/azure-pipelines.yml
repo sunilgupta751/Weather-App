@@ -59,6 +59,7 @@ stages:
         sourceFolder: '$(System.DefaultWorkingDirectory)'
         contents: '**/docker-compose.yml'
         targetFolder: '$(vmAppPath)' 
+        flatten: true
       # Deploy using Docker Compose
     - task: SSH@0
       inputs:
