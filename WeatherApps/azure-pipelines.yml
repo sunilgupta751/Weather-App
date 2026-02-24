@@ -44,34 +44,24 @@ stages:
     pool:
       name: 'SelfHosted-AgentPool'
     steps:
-     # Ensure target folder exists
-    - task: SSH@0
-      inputs:
-        sshEndpoint: $(sshServiceConnection)
-        runOptions: commands
-        commands: |
-          mkdir -p $(vmAppPath)
-          cd $(vmAppPath)
-      # Copy docker-compose.yml to VM
-    - task: CopyFilesOverSSH@0
-      inputs:
-        sshEndpoint: $(sshServiceConnection)
-        sourceFolder: '$(System.DefaultWorkingDirectory)/WeatherApps'
-        contents: '**/docker-compose.yml'
-        targetFolder: '$(vmAppPath)' 
-        flatten: true
-      # Deploy using Docker Compose
+    # Single SSH task: mkdir, copy compose, login, deploy
     - task: SSH@0
       inputs:
         sshEndpoint: $(sshServiceConnection)
         runOptions: commands
         failOnStdErr: false
         commands: |
-          cd $(vmAppPath)  
-          
-          # Login to ACR using SP (Service Principal)
+          # Ensure target folder exists
+          mkdir -p $(vmAppPath)
+          cd $(vmAppPath)
+
+          # Copy docker-compose.yml from repo to VM directly into target folder
+          cp $(System.DefaultWorkingDirectory)/WeatherApps/docker-compose.yml .  # here dot mean current path 
+
+          # Login to ACR using Service Principal
           echo $(acrServicePrincipalSecreteVal) | docker login $(acrName) -u $(acrServicePrincipalClientId) --password-stdin
-                   
+
+          # Set image tag and deploy using Docker Compose
           export IMAGE_TAG=$(Build.BuildId)
           docker compose pull
           docker compose down || true
