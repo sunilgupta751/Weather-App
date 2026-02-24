@@ -57,7 +57,7 @@ stages:
       inputs:
         sshEndpoint: $(sshServiceConnection)
         sourceFolder: '$(System.DefaultWorkingDirectory)'
-        contents: 'docker-compose.yml'
+        contents: '**/docker-compose.yml'
         targetFolder: '$(vmAppPath)' 
       # Deploy using Docker Compose
     - task: SSH@0
