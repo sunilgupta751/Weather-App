@@ -13,9 +13,7 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq
 
   weatherapp:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: acrlearn001.azurecr.io/weatherapp:${IMAGE_TAG}  # Production: use image tag from ACR
     container_name: weatherApp
     depends_on:
       - rabbitmq
