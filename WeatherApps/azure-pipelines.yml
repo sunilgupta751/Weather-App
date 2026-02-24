@@ -62,8 +62,9 @@ stages:
           echo $(acrServicePrincipalSecreteVal) | docker login $(acrName) -u $(acrServicePrincipalClientId) --password-stdin
 
           # Set image tag and deploy using Docker Compose
-          bash c '
-          export IMAGE_TAG=$(Build.BuildId)  #Docker Compose doesn’t know which version to pull.We create an environment variable using export IMAGE_TAG=$(Build.BuildId) and set latest build id.
+          # Run everything in one shell block
+          bash -c '
+            export IMAGE_TAG=$(Build.BuildId) #Docker Compose doesn’t know which version to pull.We create an environment variable using export IMAGE_TAG=$(Build.BuildId) and set latest build id.
             docker compose pull
             docker compose down || true
             docker compose up -d --remove-orphans
