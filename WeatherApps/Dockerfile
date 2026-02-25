@@ -32,12 +32,23 @@ RUN dotnet publish "./WeatherApps.csproj" -c $BUILD_CONFIGURATION -o /app/publis
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine AS final
 
+# Set a non-root user for security
+ARG APP_UID=1000
+RUN adduser -D -u $APP_UID appuser
+USER appuser
+
+# Set working directory
 WORKDIR /app
 
-USER $APP_UID
+# Install ICU libraries required for globalization (common for ASP.NET apps)
+RUN apk add --no-cache icu-libs
 
-# Expose ports
+# Copy published output from previous stage
+COPY --from=publish /app/publish .
+
+# Expose production ports
 EXPOSE 8080
 EXPOSE 8081
-COPY --from=publish /app/publish .
+
+# Set entrypoint for the container
 ENTRYPOINT ["dotnet", "WeatherApps.dll"]
