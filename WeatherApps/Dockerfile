@@ -39,12 +39,12 @@ FROM build AS publish
 
 #Internal: 1 /app/publish temporary layer me store hoti hai.
 #          2 Source code /src ab bhi publish stage me hai, lekin final runtime stage me copy nahi hoga.
+ #here c means configuration
+ #here o means ouput folder
+ #UseAppHost means OS-specific host file create nahi hota → cross-platform.
+ #TrimUnusedDependencies means unused DLLs remove
+RUN dotnet publish "./WeatherApps.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false /p:TrimUnusedDependencies=true
 
-RUN dotnet publish "./WeatherApps.csproj" \
-    -c $BUILD_CONFIGURATION \
-    -o /app/publish \
-    /p:UseAppHost=false \ #OS-specific host file create nahi hota → cross-platform.
-    /p:TrimUnusedDependencies=true #unused DLLs remove
 
 
 # =============================
