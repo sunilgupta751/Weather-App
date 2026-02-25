@@ -32,8 +32,8 @@ RUN dotnet publish "./WeatherApps.csproj" -c $BUILD_CONFIGURATION -o /app/publis
 FROM mcr.microsoft.com/dotnet/aspnet:9.0-slim AS final
 
 # Create a non-root user for security
-ARG APP_UID=1000
-RUN useradd -m -u $APP_UID appuser
+
+RUN useradd -m appuser
 USER appuser
 
 WORKDIR /app
