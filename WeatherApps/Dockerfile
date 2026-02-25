@@ -21,9 +21,9 @@ ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "WeatherApps.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # =============================
-# Stage 3: Final (Slim Runtime - Chhoti aur fast)
+# Stage 3: Final (Slim Runtime - Chhoti aur fast) (Best Balance of Size & Stability)
 # =============================
-FROM mcr.microsoft.com/dotnet/aspnet:9.0-slim AS final
+FROM mcr.microsoft.com/dotnet/aspnet:9.0-bookworm-slim AS final
 WORKDIR /app
 
 # Best Practice: .NET 9 ki images mein 'app' user default hota hai.
