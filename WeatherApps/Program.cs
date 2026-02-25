@@ -21,8 +21,9 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+app.MapGet("/", () => Results.Ok("App is Running..."));
+app.UseSwagger();
+app.UseSwaggerUI();
 //}
 
 //app.UseHttpsRedirection();
