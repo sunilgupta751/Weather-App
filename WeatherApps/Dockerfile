@@ -29,19 +29,14 @@ RUN dotnet publish "./WeatherApps.csproj" -c $BUILD_CONFIGURATION -o /app/publis
 # =============================
 # Stage 3: Final
 # =============================
+FROM mcr.microsoft.com/dotnet/aspnet:9.0-slim AS final
 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine AS final
-
-# Set a non-root user for security
+# Create a non-root user for security
 ARG APP_UID=1000
-RUN adduser -D -u $APP_UID appuser
+RUN useradd -m -u $APP_UID appuser
 USER appuser
 
-# Set working directory
 WORKDIR /app
-
-# Install ICU libraries required for globalization (common for ASP.NET apps)
-RUN apk add --no-cache icu-libs
 
 # Copy published output from previous stage
 COPY --from=publish /app/publish .
@@ -50,5 +45,5 @@ COPY --from=publish /app/publish .
 EXPOSE 8080
 EXPOSE 8081
 
-# Set entrypoint for the container
+# Set entrypoint for container
 ENTRYPOINT ["dotnet", "WeatherApps.dll"]
