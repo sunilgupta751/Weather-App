@@ -26,7 +26,8 @@ RUN dotnet publish "WeatherApps.csproj" -c $BUILD_CONFIGURATION -o /app/publish 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0-bookworm-slim AS final
 WORKDIR /app
 ENV ASPNETCORE_URLS=http://+:5132
-ENV ASPNETCORE_ENVIRONMENT=Development # Production p y line hata dena maine ye line sirf swagger ke liye likhi hai 
+# Production p niche waliline hata dena maine ye line sirf swagger ke liye likhi hai kyoki development main swaaggr ui ko dikhana thik hai
+ENV ASPNETCORE_ENVIRONMENT=Development 
 # Best Practice: .NET 9 ki images mein 'app' user default hota hai.
 # Isse root access ki vulnerability khatam ho jati hai.
 USER app
