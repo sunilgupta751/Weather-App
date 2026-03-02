@@ -1,5 +1,5 @@
 trigger:
-- dev
+- none
 
 variables:
 - group: Variable_Group_Rabbit_Mq_Password   # variable group for secrets like rabbitmqPasswordd
