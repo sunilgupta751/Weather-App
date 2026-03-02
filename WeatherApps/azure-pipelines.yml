@@ -1,5 +1,5 @@
 trigger:
-- none
+-none  # abhi none select ker rakha hai ni to dev rakh lena kyoki hum dev main push ho to trigger ho ye feature chahte hai
 
 variables:
 - group: Variable_Group_Rabbit_Mq_Password   # variable group for secrets like rabbitmqPasswordd
