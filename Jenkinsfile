@@ -4,7 +4,7 @@ pipeline {
     environment {
         ACR_URL = "acrlearn001.azurecr.io"
         IMAGE_NAME = "weatherapp"
-        ACR_CRED_ID = "azure-acr-creds" // Jo aapne Jenkins mein save kiya hai
+        ACR_CRED_ID = "acr-credentials-id-jenkins" // Jo aapne Jenkins mein save kiya hai
     }
 
     stages {
