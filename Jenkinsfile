@@ -39,14 +39,14 @@ pipeline {
         }
 
         stage('Approval for Staging') {
-            when { branch 'main' } // Manager Approval sirf main (PR merge) par
+            when { branch 'staging' } // Manager Approval sirf main (PR merge) par
             steps {
                 input message: "QA Testing OK? Staging/UAT pe deploy karein?", ok: "Approve"
             }
         }
 
         stage('Deploy to Staging') {
-            when { branch 'main' }
+            when { branch 'staging' }
             steps {
                 echo "Deploying to Staging Environment..."
             }
