@@ -83,14 +83,14 @@ pipeline {
                     sshagent(["${SSH_CRED_ID}"]) {
                         
                         // VM par folder banana agar nahi hai
-                        sh "ssh -o StrictHostKeyChecking=no ${VM_USER}@${VM_IP} 'mkdir -p ${vmPath}'"
+                        sh "ssh -o StrictHostKeyChecking=no ${VM_USER}@${DEV_SERVER_IP} 'mkdir -p ${vmPath}'"
 
                         // Repo se docker-compose.yml file VM par bhejna
-                        sh "scp -o StrictHostKeyChecking=no WeatherApps/docker-compose.yml ${VM_USER}@${VM_IP}:${vmPath}/"
+                        sh "scp -o StrictHostKeyChecking=no WeatherApps/docker-compose.yml ${VM_USER}@${DEV_SERVER_IP}:${vmPath}/"
 
                         // VM ke andar ghus kar commands chalana
                         sh """
-                            ssh -o StrictHostKeyChecking=no ${VM_USER}@${VM_IP} "
+                            ssh -o StrictHostKeyChecking=no ${VM_USER}@${DEV_SERVER_IP} "
                                 cd ${vmPath}
                                 
                                 # ACR Login (Internal login for docker-compose)
