@@ -105,9 +105,9 @@ pipeline {
                                 echo 'RABBIT_PASS=${RABBIT_PASS}' >> .env
 
                                 # Compose Magic
-                                sudo docker-compose pull
-                                sudo docker-compose down --remove-orphans
-                                sudo docker-compose up -d
+                                docker-compose pull
+                                docker-compose down --remove-orphans
+                                docker-compose up -d
                                 
                                 echo '🎉 Deployment Successful on Port ${targetPort}!'
                             "
