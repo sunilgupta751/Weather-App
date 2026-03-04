@@ -29,5 +29,10 @@ namespace WeatherApps.Controllers
             })
             .ToArray();
         }
+        [HttpGet("test")]
+        public string GetTest()
+        {
+            return "this is testing"
+        }
     }
 }
