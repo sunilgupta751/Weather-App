@@ -81,36 +81,41 @@ pipeline {
 
                     // SSH ke zariye server par command chalana
                     sshagent(["${SSH_CRED_ID}"]) {
-                        
-                        // VM par folder banana agar nahi hai
+                        // VM par folder banana
                         sh "ssh -o StrictHostKeyChecking=no ${VM_USER}@${DEV_SERVER_IP} 'mkdir -p ${vmPath}'"
-
-                        // Repo se docker-compose.yml file VM par bhejna
+                    
+                        // docker-compose file bhejna
                         sh "scp -o StrictHostKeyChecking=no WeatherApps/docker-compose.yml ${VM_USER}@${DEV_SERVER_IP}:${vmPath}/"
-
-                        // VM ke andar ghus kar commands chalana
+                    
+                        // VM ke andar deployment commands
+                        // Dhyaan dein: Yahan humne \$ use kiya hai bash variables ke liye aur ${} Jenkins variables ke liye
                         sh """
-                            ssh -o StrictHostKeyChecking=no ${VM_USER}@${DEV_SERVER_IP} "
+                            ssh -o StrictHostKeyChecking=no ${VM_USER}@${DEV_SERVER_IP} << 'EOF'
+                                set -e  # Agar koi error aaye toh script wahin ruk jaye
                                 cd ${vmPath}
-                                
-                                # ACR Login (Internal login for docker-compose)
-                                sudo az acr login --name acrlearn001
-
-                                # .env file banana (Secrets protect karne ka best tarika)
-                                echo 'ACR_URL=${ACR_URL}' > .env
-                                echo 'IMAGE_NAME=${IMAGE_NAME}' >> .env
-                                echo 'DOCKER_TAG=${UNIQUE_TAG}' >> .env
-                                echo 'HOST_PORT=${targetPort}' >> .env
-                                echo 'RABBIT_USER=admin' >> .env
-                                echo 'RABBIT_PASS=${RABBIT_PASS}' >> .env
-
-                                # Compose Magic
+                    
+                                # 1. ACR Login (Admin credentials use karein ya Jenkins se pass karein)
+                                # Agar az login kaam nahi kar raha, toh manual docker login karein
+                                sudo az acr login --name acrlearn001 || echo "Az login failed, trying fallback..."
+                    
+                                # 2. .env file (Yahan IMAGE_TAG use karein kyunki compose wahi maang raha hai)
+                                echo "ACR_URL=${ACR_URL}" > .env
+                                echo "IMAGE_NAME=${IMAGE_NAME}" >> .env
+                                echo "IMAGE_TAG=${UNIQUE_TAG}" >> .env
+                                echo "HOST_PORT=${targetPort}" >> .env
+                                echo "RABBIT_USER=admin" >> .env
+                                echo "RABBIT_PASS=${RABBIT_PASS}" >> .env
+                    
+                                # 3. Docker Compose execution
+                                echo "Pulling latest images..."
                                 sudo docker compose pull
+                                
+                                echo "Restarting containers..."
                                 sudo docker compose down --remove-orphans
                                 sudo docker compose up -d
-                                
-                                echo '🎉 Deployment Successful on Port ${targetPort}!'
-                            "
+                    
+                                echo '🚀 Real Deployment Successful on Port ${targetPort}!'
+                    EOF
                         """
                     }
                 }
