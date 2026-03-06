@@ -78,7 +78,7 @@ pipeline {
                     }
 
                     echo "🚀 Deploying to ${env.BRANCH_NAME} server at ${targetIP}..."
-
+		withCredentials([usernamePassword(credentialsId: env.ACR_CRED_ID, usernameVariable: 'ACR_USR', passwordVariable: 'ACR_PSW')]) {
                     // SSH ke zariye server par command chalana
                     sshagent(["${SSH_CRED_ID}"]) {
                         // VM par folder banana
@@ -119,6 +119,7 @@ pipeline {
                         """
                     }
                 }
+		}
             }
         }
         
