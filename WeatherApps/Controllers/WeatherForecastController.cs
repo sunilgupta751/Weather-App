@@ -32,7 +32,7 @@ namespace WeatherApps.Controllers
         [HttpGet("test")]
         public string GetTest()
         {
-            return "this is testing112";
+            return "this is testing112 jai ho";
         }
     }
 }
