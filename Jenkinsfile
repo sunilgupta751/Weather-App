@@ -8,6 +8,7 @@ pipeline {
         ACR_CRED_ID = "acr-credentials-id-jenkins"
         SSH_CRED_ID = "server-ssh-creds"
         RABBIT_CRED_ID = "rabbitmq-password-id"
+        //Ye line Git se aapke latest commit ka unique ID (jise SHA ya Hash kehte hain) mangti hai aur use chota karke (short) ek variable mein store kar deti hai.
         GIT_SHA = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
     }
 
