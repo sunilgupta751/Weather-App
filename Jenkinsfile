@@ -65,5 +65,6 @@ pipeline {
         }
     }
 }
+deployToVM(targetIP, targetPort, envName)
 
 
