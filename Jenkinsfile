@@ -30,14 +30,16 @@ pipeline {
 
         stage('Deploy to DEV') {
             when { branch 'dev' }
-            steps { deployToVM("20.96.26.236", "8081", "dev") //--shared library p call ho raha hai ye function }
+            //--shared library p call ho raha hai ye function 
+            steps { deployToVM("20.96.26.236", "8081", "dev") }
         }
 
         stage('Deploy to STAGING') {
             when { branch 'staging' }
             steps {
                 input message: "Approve deployment to STAGING?", ok: "Deploy"
-                deployToVM("23.x.x.x", "8081", "staging")//--shared library p call ho raha hai ye function
+                //--shared library p call ho raha hai ye function
+                deployToVM("23.x.x.x", "8081", "staging")
             }
         }
 
@@ -45,7 +47,8 @@ pipeline {
             when { anyOf { branch 'main'; branch 'prod' } }
             steps {
                 input message: "🚀 Ready for Production?", ok: "Deploy"
-                deployToVM("52.x.x.x", "80", "prod")//--shared library p call ho raha hai ye function
+                //--shared library p call ho raha hai ye function
+                deployToVM("52.x.x.x", "80", "prod")
             }
         }
     }
