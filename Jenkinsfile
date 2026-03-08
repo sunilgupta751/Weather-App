@@ -1,5 +1,5 @@
 
-@Library("jenkins-shared-library") _
+@Library("shared-libraries") _
 pipeline {
     agent any
     environment {
