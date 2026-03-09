@@ -1,7 +1,9 @@
 
 @Library("shared-libraries") _
 pipeline {
-    agent any
+    agent {
+        label 'dotnet-build-aci-agent' 
+    }
     environment {
         ACR_URL = "acrlearn001.azurecr.io"
         IMAGE_NAME = "weatherapp"
