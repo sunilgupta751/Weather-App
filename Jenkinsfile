@@ -18,15 +18,31 @@ pipeline {
         stage('Initialize & Build') {
             steps {
                 script {
+             
+                    /*
                     env.DOCKER_TAG = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}-${env.GIT_SHA}"
                     currentBuild.displayName = "#${env.BUILD_NUMBER} [${env.BRANCH_NAME.toUpperCase()}]"
-                    
                     docker.withRegistry("https://${env.ACR_URL}", "${env.ACR_CRED_ID}") {
                         dir('WeatherApps') {
                             def appImage = docker.build("${env.ACR_URL}/${IMAGE_NAME}:${env.DOCKER_TAG}")
                             appImage.push()
                         }
-                    }
+                    }*/
+                    // Unique Tagging
+            // Unique Tagging
+            env.GIT_SHA = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+            env.DOCKER_TAG = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}-${env.GIT_SHA}"
+
+            // Azure Login: Ismein wahi Credential ID use karo jo Jenkins mein save hai
+            withCredentials([azureServicePrincipal('acr-credentials-id-jenkins')]) {
+                sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID'
+                
+                dir('WeatherApps') {
+                    echo "🚀 MNC Standard: Offloading build to Azure ACR Task..."
+                    
+                    // Ye line aapka Docker Plugin wala jhanjhat khatam kar degi
+                    // Humein docker.withRegistry ki zaroorat nahi hai
+                    sh "az acr build --registry acrlearn001 --image ${IMAGE_NAME}:${env.DOCKER_TAG} ."
                 }
             }
         }
