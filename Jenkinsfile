@@ -1,7 +1,7 @@
 @Library("shared-libraries") _
 pipeline {
     agent {
-        label 'dotnet-build-aci-agent' 
+        label 'agentdotnet' 
     }
     environment {
         ACR_URL = "acrlearn001.azurecr.io"
