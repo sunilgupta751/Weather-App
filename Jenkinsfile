@@ -16,6 +16,7 @@ pipeline {
         stage('Initialize & Build') {
             steps {
                 script {
+                    /*
                     env.DOCKER_TAG = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}-${env.GIT_SHA}"
                     currentBuild.displayName = "#${env.BUILD_NUMBER} [${env.BRANCH_NAME.toUpperCase()}]"
                     
@@ -23,6 +24,20 @@ pipeline {
                         dir('WeatherApps') {
                             def appImage = docker.build("${env.ACR_URL}/${IMAGE_NAME}:${env.DOCKER_TAG}")
                             appImage.push()
+                        }
+                    }*/
+                    env.DOCKER_TAG = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}-${env.GIT_SHA}"
+            
+                    // Azure Credentials use karke login karo
+                    withCredentials([usernamePassword(credentialsId: "${env.ACR_CRED_ID}", passwordVariable: 'ACR_PASSWORD', usernameVariable: 'ACR_USERNAME')]) {
+                        
+                        // 1. ACR Login (Command line se)
+                        sh "az acr login --name acrlearn001 --username ${ACR_USERNAME} --password ${ACR_PASSWORD}"
+                        
+                        // 2. ACR Build (Ye command Azure ko build ka order degi)
+                        dir('WeatherApps') {
+                            // Yahan ye aapki Dockerfile ko Azure par bhej dega build ke liye
+                            sh "az acr build --registry acrlearn001 --image ${IMAGE_NAME}:${env.DOCKER_TAG} ."
                         }
                     }
                 }
